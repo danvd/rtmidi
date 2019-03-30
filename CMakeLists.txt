@@ -7,6 +7,9 @@ cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 # Define a C++ project.
 project(RtMidi LANGUAGES CXX)
 
+#includes
+include(CheckCXXSourceCompiles)
+
 # Check for Jack (any OS)
 find_library(JACK_LIB jack)
 find_package(PkgConfig)
@@ -90,6 +93,25 @@ if(RTMIDI_API_JACK)
   if(jack_FOUND)
     list(APPEND LINKLIBS ${jack_LIBRARIES})
     list(APPEND INCDIRS ${jack_INCLUDEDIR})
+    set(CMAKE_REQUIRED_INCLUDES ${jack_INCLUDEDIR})
+    set(CMAKE_REQUIRED_LIBRARIES ${jack_LIBRARIES})
+    # Test for 'port_rename' API function
+    check_cxx_source_compiles(
+       "#include <jack/jack.h>          // jack header
+        int main ()
+        {
+          jack_client_t *client = NULL;
+          jack_port_t *port = NULL;
+          jack_port_rename( client, port, NULL );
+          return 0;
+        }"
+      JACK_HAS_PORT_RENAME
+    )
+    unset(CMAKE_REQUIRED_INCLUDES)
+    unset(CMAKE_REQUIRED_LIBRARIES)
+    if(JACK_HAS_PORT_RENAME)
+        add_definitions(-DJACK_HAS_PORT_RENAME)
+    endif()
   else()
     list(APPEND LINKLIBS ${JACK_LIB})
   endif()
