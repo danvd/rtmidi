@@ -26,7 +26,7 @@ option(RTMIDI_BUILD_SHARED_LIBS "Compile library shared lib." TRUE)
 option(RTMIDI_BUILD_STATIC_LIBS "Compile library static lib." TRUE)
 option(RTMIDI_BUILD_TESTING "Compile test programs." TRUE)
 set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type (Release,Debug)")
-set(RTMIDI_TARGETNAME_UNINSTALL "uninstall" CACHE STRING "Name of 'uninstall' build target")
+set(RTMIDI_TARGETNAME_UNINSTALL "rtmidi_uninstall" CACHE STRING "Name of 'uninstall' build target")
 
 # API Options
 option(RTMIDI_API_JACK "Compile with JACK support." ${HAVE_JACK})
